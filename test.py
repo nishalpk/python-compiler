@@ -1,3 +1,20 @@
+import sys
+
+class Logger(object):
+    def __init__(self):
+        self.terminal = sys.stdout
+        self.log = open("output.txt", "w", encoding="utf-8")
+   
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)  
+
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+sys.stdout = Logger()
+
 #basic imports
 from lexer import Lexer, LexerError
 from parser import Parser, SyntaxErrors
@@ -51,3 +68,28 @@ except SyntaxError as e:
         getattr(e, "col", 1),
         getattr(e, "message_only", str(e)),
     )
+
+#Table Driven Parser Code:
+import sys
+from ll1_parser import LL1Parser
+from slr_parser import ShiftReduceParser
+from grammar import (compute_first_sets, compute_follow_sets,
+                     print_first_sets, print_follow_sets)
+
+print("\n" * 4)
+print(" LL(1) Table-Driven Parser")
+print("=" * 60)
+first = compute_first_sets()
+follow = compute_follow_sets(first)
+print_first_sets(first)
+print_follow_sets(follow)
+ll1 = LL1Parser()
+ll1.print_table()
+ll1.parse(tokens)
+
+print("\n" + "=" * 60)
+print("Shift-Reduce Parser")
+print("=" * 60)
+slr = ShiftReduceParser()
+slr.parse(tokens)
+
