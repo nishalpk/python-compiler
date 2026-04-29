@@ -23,7 +23,8 @@ class LexerError(RuntimeError):
 
 class Lexer:
     rules = [
-    ('keyword',           r'\b(int|float|if|else|while|print)\b'),
+    ('keyword',           r'\b(int|float|if|else|while|for|print)\b'),
+    ('increment_operator', r'\+\+'),
     ('float_constant',    r'\d+\.\d+'),
     ('integer_constant',  r'\d+'),
     ('identifier',        r'[a-zA-Z_][a-zA-Z0-9_]*'),

@@ -1,0 +1,535 @@
+Tokens: [('keyword', 'int'), ('identifier', 'a'), ('semicolon', ';'), ('keyword', 'int'), ('identifier', 'b'), ('semicolon', ';'), ('keyword', 'int'), ('identifier', 'c'), ('semicolon', ';'), ('keyword', 'int'), ('identifier', 'd'), ('semicolon', ';'), ('keyword', 'int'), ('identifier', 'e'), ('semicolon', ';'), ('keyword', 'int'), ('identifier', 'f'), ('semicolon', ';'), ('keyword', 'int'), ('identifier', 'x'), ('semicolon', ';'), ('keyword', 'while'), ('left_parenthesis', '('), ('identifier', 'a'), ('relational_operator', '<'), ('identifier', 'b'), ('right_parenthesis', ')'), ('left_brace', '{'), ('keyword', 'if'), ('left_parenthesis', '('), ('identifier', 'c'), ('relational_operator', '>'), ('identifier', 'd'), ('boolean_operator', '&&'), ('identifier', 'e'), ('relational_operator', '<'), ('identifier', 'f'), ('right_parenthesis', ')'), ('identifier', 'x'), ('assignment', '='), ('identifier', 'a'), ('arithmetic_operator', '+'), ('identifier', 'b'), ('arithmetic_operator', '*'), ('identifier', 'c'), ('semicolon', ';'), ('keyword', 'else'), ('identifier', 'x'), ('assignment', '='), ('left_parenthesis', '('), ('identifier', 'a'), ('arithmetic_operator', '+'), ('identifier', 'd'), ('right_parenthesis', ')'), ('arithmetic_operator', '*'), ('left_parenthesis', '('), ('identifier', 'e'), ('arithmetic_operator', '-'), ('identifier', 'f'), ('right_parenthesis', ')'), ('semicolon', ';'), ('identifier', 'a'), ('assignment', '='), ('identifier', 'a'), ('arithmetic_operator', '+'), ('integer_constant', '1'), ('semicolon', ';'), ('right_brace', '}')]
+Syntactic Validation Successful.
+|-- Program
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- a
+      |-- ;
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- b
+      |-- ;
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- c
+      |-- ;
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- d
+      |-- ;
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- e
+      |-- ;
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- f
+      |-- ;
+  |-- Statement
+    |-- Declaration
+      |-- int
+      |-- x
+      |-- ;
+  |-- Statement
+    |-- WhileStatement
+      |-- while
+      |-- (
+      |-- BooleanExpression
+        |-- BooleanTerm
+          |-- BooleanFactor
+            |-- Expression
+              |-- Term
+                |-- Factor
+                  |-- a
+            |-- <
+            |-- Expression
+              |-- Term
+                |-- Factor
+                  |-- b
+      |-- )
+      |-- Statement
+        |-- Block
+          |-- {
+          |-- Statement
+            |-- IfStatement
+              |-- if
+              |-- (
+              |-- BooleanExpression
+                |-- BooleanTerm
+                  |-- BooleanFactor
+                    |-- Expression
+                      |-- Term
+                        |-- Factor
+                          |-- c
+                    |-- >
+                    |-- Expression
+                      |-- Term
+                        |-- Factor
+                          |-- d
+                  |-- &&
+                  |-- BooleanFactor
+                    |-- Expression
+                      |-- Term
+                        |-- Factor
+                          |-- e
+                    |-- <
+                    |-- Expression
+                      |-- Term
+                        |-- Factor
+                          |-- f
+              |-- )
+              |-- Statement
+                |-- Assignment
+                  |-- x
+                  |-- =
+                  |-- Expression
+                    |-- Term
+                      |-- Factor
+                        |-- a
+                    |-- +
+                    |-- Term
+                      |-- Factor
+                        |-- b
+                      |-- *
+                      |-- Factor
+                        |-- c
+                  |-- ;
+              |-- else
+              |-- Statement
+                |-- Assignment
+                  |-- x
+                  |-- =
+                  |-- Expression
+                    |-- Term
+                      |-- Factor
+                        |-- (
+                        |-- Expression
+                          |-- Term
+                            |-- Factor
+                              |-- a
+                          |-- +
+                          |-- Term
+                            |-- Factor
+                              |-- d
+                        |-- )
+                      |-- *
+                      |-- Factor
+                        |-- (
+                        |-- Expression
+                          |-- Term
+                            |-- Factor
+                              |-- e
+                          |-- -
+                          |-- Term
+                            |-- Factor
+                              |-- f
+                        |-- )
+                  |-- ;
+          |-- Statement
+            |-- Assignment
+              |-- a
+              |-- =
+              |-- Expression
+                |-- Term
+                  |-- Factor
+                    |-- a
+                |-- +
+                |-- Term
+                  |-- Factor
+                    |-- 1
+              |-- ;
+          |-- }
+
+--- Leftmost Derivation ---
+    Program
+ => Statement Statement Statement Statement Statement Statement Statement Statement
+ => Declaration Statement Statement Statement Statement Statement Statement Statement
+ => int a ; Statement Statement Statement Statement Statement Statement Statement
+ => int a ; Declaration Statement Statement Statement Statement Statement Statement
+ => int a ; int b ; Statement Statement Statement Statement Statement Statement
+ => int a ; int b ; Declaration Statement Statement Statement Statement Statement
+ => int a ; int b ; int c ; Statement Statement Statement Statement Statement
+ => int a ; int b ; int c ; Declaration Statement Statement Statement Statement
+ => int a ; int b ; int c ; int d ; Statement Statement Statement Statement
+ => int a ; int b ; int c ; int d ; Declaration Statement Statement Statement
+ => int a ; int b ; int c ; int d ; int e ; Statement Statement Statement
+ => int a ; int b ; int c ; int d ; int e ; Declaration Statement Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; Statement Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; Declaration Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; WhileStatement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( BooleanExpression ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( BooleanTerm ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( BooleanFactor ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( Expression < Expression ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( Term < Expression ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( Factor < Expression ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < Expression ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < Term ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < Factor ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) Statement
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) Block
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { IfStatement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( BooleanExpression ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( BooleanTerm ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( BooleanFactor && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( Expression > Expression && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( Term > Expression && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( Factor > Expression && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > Expression && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > Term && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > Factor && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && BooleanFactor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && Expression < Expression ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && Term < Expression ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && Factor < Expression ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < Expression ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < Term ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < Factor ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) Statement else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) Assignment else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = Expression ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = Term + Term ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = Factor + Term ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + Term ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + Factor * Factor ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * Factor ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else Statement Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else Assignment Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = Expression ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = Term ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = Factor * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( Expression ) * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( Term + Term ) * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( Factor + Term ) * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + Term ) * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + Factor ) * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * Factor ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( Expression ) ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( Term - Term ) ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( Factor - Term ) ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - Term ) ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - Factor ) ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; Statement }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; Assignment }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = Expression ; }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = Term + Term ; }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = Factor + Term ; }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + Term ; }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + Factor ; }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+
+--- Rightmost Derivation ---
+    Program
+ => Statement Statement Statement Statement Statement Statement Statement Statement
+ => Statement Statement Statement Statement Statement Statement Statement WhileStatement
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) Statement
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) Block
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement Statement }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement Assignment }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement a = Expression ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement a = Term + Term ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement a = Term + Factor ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement a = Term + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement a = Factor + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { Statement a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { IfStatement a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else Statement a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else Assignment a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Expression ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Term ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * Factor ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * ( Expression ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * ( Term - Term ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * ( Term - Factor ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * ( Term - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * ( Factor - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = Factor * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = ( Expression ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = ( Term + Term ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = ( Term + Factor ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = ( Term + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = ( Factor + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Statement else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) Assignment else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = Expression ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = Term + Term ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = Term + Factor * Factor ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = Term + Factor * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = Term + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = Factor + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanExpression ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanTerm ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && BooleanFactor ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && Expression < Expression ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && Expression < Term ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && Expression < Factor ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && Expression < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && Term < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && Factor < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( BooleanFactor && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( Expression > Expression && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( Expression > Term && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( Expression > Factor && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( Expression > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( Term > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( Factor > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanExpression ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanTerm ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( BooleanFactor ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( Expression < Expression ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( Expression < Term ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( Expression < Factor ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( Expression < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( Term < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( Factor < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Statement while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement Declaration while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Statement int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement Declaration int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Statement int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement Declaration int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Statement int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement Declaration int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Statement int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement Declaration int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Statement int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement Declaration int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Statement int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => Declaration int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+ => int a ; int b ; int c ; int d ; int e ; int f ; int x ; while ( a < b ) { if ( c > d && e < f ) x = a + b * c ; else x = ( a + d ) * ( e - f ) ; a = a + 1 ; }
+
+
+
+ Symbol Table and Semantic Analysis
+============================================================
+Enter scope 'global'
+  Active symbols: <empty>
+
+Insert 'a' as int in scope 'global' at offset 0
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+
+Insert 'b' as int in scope 'global' at offset 4
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+
+Insert 'c' as int in scope 'global' at offset 8
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+
+Insert 'd' as int in scope 'global' at offset 12
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+    d            int    global     0     12    
+
+Insert 'e' as int in scope 'global' at offset 16
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+    d            int    global     0     12    
+    e            int    global     0     16    
+
+Insert 'f' as int in scope 'global' at offset 20
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+    d            int    global     0     12    
+    e            int    global     0     16    
+    f            int    global     0     20    
+
+Insert 'x' as int in scope 'global' at offset 24
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+    d            int    global     0     12    
+    e            int    global     0     16    
+    f            int    global     0     20    
+    x            int    global     0     24    
+
+Enter scope 'block_1'
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+    d            int    global     0     12    
+    e            int    global     0     16    
+    f            int    global     0     20    
+    x            int    global     0     24    
+
+Exit scope 'block_1'
+  Active symbols:
+    Name         Type   Scope      Level Offset
+    ------------ ------ ---------- ----- ------
+    a            int    global     0     0     
+    b            int    global     0     4     
+    c            int    global     0     8     
+    d            int    global     0     12    
+    e            int    global     0     16    
+    f            int    global     0     20    
+    x            int    global     0     24    
+
+Semantic Validation Successful.
+
+
+
+ Three-Address Code Generation
+============================================================
+
+--- Readable TAC ---
+  L0:
+  ( 1)  t0 = a < b
+  ( 2)  if t0 == false goto L1
+  ( 3)  t1 = c > d
+  ( 4)  t2 = e < f
+  ( 5)  t3 = t1 && t2
+  ( 6)  if t3 == false goto L2
+  ( 7)  t4 = b * c
+  ( 8)  t5 = a + t4
+  ( 9)  x = t5
+  (10)  goto L3
+  L2:
+  (12)  t6 = a + d
+  (13)  t7 = e - f
+  (14)  t8 = t6 * t7
+  (15)  x = t8
+  L3:
+  (17)  t9 = a + 1
+  (18)  a = t9
+  (19)  goto L0
+  L1:
+
+--- Quadruples Table (op, arg1, arg2, result) ---
+  #      op                arg1          arg2          result      
+  -----  ----------------  ------------  ------------  ------------
+  0      label                                         L0          
+  1      <                 a             b             t0          
+  2      if_false_goto     t0                          L1          
+  3      >                 c             d             t1          
+  4      <                 e             f             t2          
+  5      &&                t1            t2            t3          
+  6      if_false_goto     t3                          L2          
+  7      *                 b             c             t4          
+  8      +                 a             t4            t5          
+  9      =                 t5                          x           
+  10     goto                                          L3          
+  11     label                                         L2          
+  12     +                 a             d             t6          
+  13     -                 e             f             t7          
+  14     *                 t6            t7            t8          
+  15     =                 t8                          x           
+  16     label                                         L3          
+  17     +                 a             1             t9          
+  18     =                 t9                          a           
+  19     goto                                          L0          
+  20     label                                         L1          
+
+  Total instructions: 21
+
+TAC Generation Successful.
+
+
+
+ Question 5: Optimization and Target Code Generation
+============================================================
+
+--- Optimization Technique ---
+Constant folding, algebraic simplification, and single-use temporary propagation on generated TAC.
+
+--- Optimized Readable TAC ---
+  L0:
+  ( 1)  t0 = a < b
+  ( 2)  if t0 == false goto L1
+  ( 3)  t1 = c > d
+  ( 4)  t2 = e < f
+  ( 5)  t3 = t1 && t2
+  ( 6)  if t3 == false goto L2
+  ( 7)  t4 = b * c
+  ( 8)  x = a + t4
+  ( 9)  goto L3
+  L2:
+  (11)  t6 = a + d
+  (12)  t7 = e - f
+  (13)  x = t6 * t7
+  L3:
+  (15)  a = a + 1
+  (16)  goto L0
+  L1:
+
+--- Optimized Quadruples Table (op, arg1, arg2, result) ---
+  #      op                arg1          arg2          result      
+  -----  ----------------  ------------  ------------  ------------
+  0      label                                         L0          
+  1      <                 a             b             t0          
+  2      if_false_goto     t0                          L1          
+  3      >                 c             d             t1          
+  4      <                 e             f             t2          
+  5      &&                t1            t2            t3          
+  6      if_false_goto     t3                          L2          
+  7      *                 b             c             t4          
+  8      +                 a             t4            x           
+  9      goto                                          L3          
+  10     label                                         L2          
+  11     +                 a             d             t6          
+  12     -                 e             f             t7          
+  13     *                 t6            t7            x           
+  14     label                                         L3          
+  15     +                 a             1             a           
+  16     goto                                          L0          
+  17     label                                         L1          
+
+--- Pseudo Assembly Target Code ---
+L0:
+    LT t0, a, b
+    JZ t0, L1
+    GT t1, c, d
+    LT t2, e, f
+    AND t3, t1, t2
+    JZ t3, L2
+    MUL t4, b, c
+    ADD x, a, t4
+    JMP L3
+L2:
+    ADD t6, a, d
+    SUB t7, e, f
+    MUL x, t6, t7
+L3:
+    ADD a, a, 1
+    JMP L0
+L1:
+
+  Original TAC instructions: 21
+  Optimized TAC instructions: 18
+
+Optimization and Target Code Generation Successful.

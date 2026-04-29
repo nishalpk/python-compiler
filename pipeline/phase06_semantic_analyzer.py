@@ -1,6 +1,6 @@
 """Semantic analysis and symbol-table tracing for the mini language."""
 
-from symbol_table import SymbolTable
+from pipeline.phase05_symbol_table import SymbolTable
 
 
 BOOL_TYPE = "bool"

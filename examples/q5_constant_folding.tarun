@@ -1,0 +1,5 @@
+int x;
+int y;
+x = 2 + 3 * 4;
+y = x + 0;
+print(y);

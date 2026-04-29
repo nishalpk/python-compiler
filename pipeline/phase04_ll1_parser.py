@@ -1,11 +1,11 @@
 ## GROUP: TARUN, NISHAL 2023A7PS0209U, CHIRU, CALEB
 
 # ============================================================
-# ll1_parser.py - Table-driven LL(1) Predictive Parser
-# Uses the grammar, FIRST, and FOLLOW sets from grammar.py
+# phase04_ll1_parser.py - Table-driven LL(1) Predictive Parser
+# Uses the grammar, FIRST, and FOLLOW sets from phase02_grammar.py
 # ============================================================
 
-from grammar import (
+from pipeline.phase02_grammar import (
     GRAMMAR, START_SYMBOL, EPSILON, TERMINALS,
     is_terminal, is_nonterminal,
     compute_first_sets, compute_follow_sets,
@@ -25,6 +25,7 @@ class LL1Parser:
         self.first = compute_first_sets()
         self.follow = compute_follow_sets(self.first)
         self.table = {}   # table[(NonTerminal, terminal)] = production RHS
+        self.conflicts = []
         self._build_table()
 
     # ---- Build the LL(1) parsing table ----
@@ -35,44 +36,55 @@ class LL1Parser:
                 # For each terminal a in FIRST(rhs), add table entry
                 for a in first_rhs:
                     if a != EPSILON:
-                        if (nt, a) not in self.table:
-                            self.table[(nt, a)] = rhs
+                        self._add_table_entry((nt, a), rhs)
                 # If eps in FIRST(rhs), add entry for each b in FOLLOW(nt)
                 if EPSILON in first_rhs:
                     for b in self.follow[nt]:
-                        if (nt, b) not in self.table:
-                            self.table[(nt, b)] = rhs
+                        self._add_table_entry((nt, b), rhs)
+
+    def _add_table_entry(self, key, rhs):
+        existing = self.table.get(key)
+        if existing is None or existing == rhs:
+            self.table[key] = rhs
+            return
+
+        chosen = self._resolve_conflict(existing, rhs)
+        self.conflicts.append((key, existing, rhs, chosen))
+        self.table[key] = chosen
+
+    def _resolve_conflict(self, existing, candidate):
+        if existing == [EPSILON] and candidate != [EPSILON]:
+            return candidate
+        if candidate == [EPSILON] and existing != [EPSILON]:
+            return existing
+        return existing
 
     # ---- Pretty-print the parsing table ----
     def print_table(self):
-        # Collect terminals that appear in the table
-        term_set = set()
-        for (nt, t) in self.table:
-            term_set.add(t)
-        terminals = sorted(term_set)
         nonterminals = list(GRAMMAR.keys())
-
-        from tabulate import tabulate
 
         print("\n" + "=" * 50)
         print("  LL(1) Parsing Table")
         print("=" * 50)
-
-        headers = ["NonTerminal \\ Terminal"] + terminals
-        table_data = []
+        print("  Non-empty table entries are shown.")
 
         for nt in nonterminals:
-            row = [nt]
-            has_entry = False
-            for t in terminals:
+            entries = []
+            for t in sorted({terminal for nonterminal, terminal in self.table if nonterminal == nt}):
                 entry = self.table.get((nt, t))
-                if entry: has_entry = True
-                cell = f"{nt} -> {' '.join(entry)}" if entry else ""
-                row.append(cell)
-            if has_entry:
-                table_data.append(row)
+                if entry:
+                    entries.append(f"{t}: {nt} -> {' '.join(entry)}")
+            if entries:
+                print(f"  {nt}: " + " | ".join(entries))
 
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        if self.conflicts:
+            print("\n  Conflict resolutions:")
+            for (nt, terminal), old, new, chosen in self.conflicts:
+                print(
+                    f"  M[{nt}, {terminal}]: "
+                    f"{nt} -> {' '.join(old)} vs {nt} -> {' '.join(new)}; "
+                    f"using {nt} -> {' '.join(chosen)}"
+                )
 
     # ---- Run LL(1) parsing with step-by-step trace ----
     def parse(self, tokens):

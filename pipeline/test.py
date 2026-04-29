@@ -1,20 +1,29 @@
 import sys
 from pathlib import Path
 
-from grammar import print_first_sets, print_follow_sets
-from lexer import Lexer, LexerError
-from ll1_parser import LL1Parser
-from parser import Parser, SyntaxErrors
-from semantic_analyzer import SemanticAnalyzer
-from slr_parser import ShiftReduceParser
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from pipeline.phase01_lexer import Lexer, LexerError
+from pipeline.phase02_grammar import print_first_sets, print_follow_sets
+from pipeline.phase03_parser import Parser, SyntaxErrors
+from pipeline.phase04_ll1_parser import LL1Parser
+from pipeline.phase04_slr_parser import ShiftReduceParser
+from pipeline.phase06_semantic_analyzer import SemanticAnalyzer
+from pipeline.phase07_tac import TACGenerator
+from pipeline.phase08_optimizer import optimize_quads
+from pipeline.phase09_target_code import generate_pseudo_assembly
 
 
 class Logger:
-    """Mirror terminal output into output.txt for assignment demos."""
+    """Mirror terminal output into output/output.txt for assignment demos."""
 
     def __init__(self):
         self.terminal = sys.stdout
-        self.log = open("output.txt", "w", encoding="utf-8")
+        output_path = Path("output/output.txt")
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        self.log = output_path.open("w", encoding="utf-8")
 
     def write(self, message):
         """Write one message to both stdout destinations."""
@@ -43,7 +52,7 @@ def print_error(filename, src, line, col, message):
 
 def resolve_source_path(argv):
     """Resolve the source file path from the CLI arguments."""
-    return argv[1] if len(argv) > 1 else "code.tarun"
+    return argv[1] if len(argv) > 1 else "input/code.tarun"
 
 
 def read_source(source_path):
@@ -79,10 +88,8 @@ def run_semantic_analysis(root, source_path, code):
     print("Semantic Validation Successful.")
     return True
 
-from tac import TACGenerator
-
 def run_tac_generation(root):
-    """Generate Three-Address Code (Quadruples) from the AST and print it."""
+    """Generate TAC, optimize it, and print pseudo assembly target code."""
     print("\n\n\n Three-Address Code Generation")
     print("=" * 60)
     gen = TACGenerator()
@@ -96,6 +103,26 @@ def run_tac_generation(root):
 
     print(f"\n  Total instructions: {len(quads)}")
     print("\nTAC Generation Successful.")
+
+    optimized_quads = optimize_quads(quads)
+
+    print("\n\n\n Question 5: Optimization and Target Code Generation")
+    print("=" * 60)
+    print("\n--- Optimization Technique ---")
+    print("Constant folding, algebraic simplification, and single-use temporary propagation on generated TAC.")
+
+    print("\n--- Optimized Readable TAC ---")
+    print(TACGenerator.format_readable(optimized_quads))
+
+    print("\n--- Optimized Quadruples Table (op, arg1, arg2, result) ---")
+    print(TACGenerator.format_quads(optimized_quads))
+
+    print("\n--- Pseudo Assembly Target Code ---")
+    print(generate_pseudo_assembly(optimized_quads))
+
+    print(f"\n  Original TAC instructions: {len(quads)}")
+    print(f"  Optimized TAC instructions: {len(optimized_quads)}")
+    print("\nOptimization and Target Code Generation Successful.")
 
 
 def main(argv=None):

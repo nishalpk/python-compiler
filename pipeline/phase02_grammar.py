@@ -1,7 +1,7 @@
 ## GROUP: TARUN, NISHAL 2023A7PS0209U, CHIRU, CALEB
 
 # ============================================================
-# grammar.py - Formal grammar, FIRST sets, and FOLLOW sets
+# phase02_grammar.py - Formal grammar, FIRST sets, and FOLLOW sets
 # Extracted from the recursive-descent parser in parser.py
 # ============================================================
 
@@ -10,9 +10,9 @@ import re
 # Terminal symbols mapped from lexer token kinds/values
 TERMINALS = {
     'TYPE', 'ID', 'INT_CONST', 'FLOAT_CONST',
-    'ADDOP', 'MULOP', 'RELOP', 'AND', 'OR', 'NOT',
+    'ADDOP', 'MULOP', 'RELOP', 'AND', 'OR', 'NOT', 'INC',
     'ASSIGN', 'SEMI', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
-    'IF', 'ELSE', 'WHILE', 'PRINT',
+    'IF', 'ELSE', 'WHILE', 'FOR', 'PRINT',
     '$',
 }
 
@@ -30,6 +30,7 @@ GRAMMAR = {
     'Stmt':          [['Decl'],
                       ['IfStmt'],
                       ['WhileStmt'],
+                      ['ForStmt'],
                       ['PrintStmt'],
                       ['Block'],
                       ['Assign']],
@@ -39,9 +40,13 @@ GRAMMAR = {
     'ElsePart':      [['ELSE', 'Stmt'],
                       [EPSILON]],
     'WhileStmt':     [['WHILE', 'LPAREN', 'BoolExpr', 'RPAREN', 'Stmt']],
+    'ForStmt':       [['FOR', 'LPAREN', 'ForAssign', 'SEMI', 'BoolExpr', 'SEMI', 'ForUpdate', 'RPAREN', 'Stmt']],
     'PrintStmt':     [['PRINT', 'LPAREN', 'Expr', 'RPAREN', 'SEMI']],
     'Block':         [['LBRACE', 'StmtList', 'RBRACE']],
     'Assign':        [['ID', 'ASSIGN', 'Expr', 'SEMI']],
+    'ForAssign':     [['ID', 'ASSIGN', 'Expr']],
+    'ForUpdate':     [['ID', 'ASSIGN', 'Expr'],
+                      ['ID', 'INC']],
 
     # Arithmetic expressions (left-recursion eliminated)
     'Expr':          [['Term', 'ExprTail']],
@@ -84,9 +89,11 @@ def token_to_terminal(kind, value):
     if kind == 'keyword':
         return {'int': 'TYPE', 'float': 'TYPE',
                 'if': 'IF', 'else': 'ELSE',
-                'while': 'WHILE', 'print': 'PRINT'}.get(value, value)
+                'while': 'WHILE', 'for': 'FOR', 'print': 'PRINT'}.get(value, value)
     if kind == 'arithmetic_operator':
         return 'ADDOP' if value in ('+', '-') else 'MULOP'
+    if kind == 'increment_operator':
+        return 'INC'
     if kind == 'boolean_operator':
         return {'&&': 'AND', '||': 'OR', '!': 'NOT'}.get(value, value)
     return {

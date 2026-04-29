@@ -2,11 +2,12 @@
 
 This project implements the assignment pipeline for a small `int`/`float` language:
 
-- lexical analysis in `lexer.py`
-- recursive-descent parsing in `parser.py`
-- table-driven LL(1) parsing in `ll1_parser.py`
-- table-driven SLR parsing in `slr_parser.py`
-- symbol-table construction and semantic analysis in `symbol_table.py` and `semantic_analyzer.py`
+- lexical analysis in `pipeline/phase01_lexer.py`
+- grammar helpers in `pipeline/phase02_grammar.py`
+- recursive-descent parsing in `pipeline/phase03_parser.py`
+- table-driven LL(1) parsing in `pipeline/phase04_ll1_parser.py`
+- table-driven SLR parsing in `pipeline/phase04_slr_parser.py`
+- symbol-table construction and semantic analysis in `pipeline/phase05_symbol_table.py` and `pipeline/phase06_semantic_analyzer.py`
 
 ## Semantic Features
 
@@ -41,16 +42,16 @@ Mixed `int`/`float` arithmetic is treated as a semantic error. There is no impli
 Run the default evaluation program:
 
 ```bash
-python3 test.py
+python3 pipeline/test.py
 ```
 
 Run a specific example file:
 
 ```bash
-python3 test.py examples/undeclared_variable.tarun
-python3 test.py examples/duplicate_declaration.tarun
-python3 test.py examples/type_mismatch.tarun
-python3 test.py examples/invalid_boolean_condition.tarun
+python3 pipeline/test.py examples/undeclared_variable.tarun
+python3 pipeline/test.py examples/duplicate_declaration.tarun
+python3 pipeline/test.py examples/type_mismatch.tarun
+python3 pipeline/test.py examples/invalid_boolean_condition.tarun
 ```
 
 ## Output Flow
@@ -66,11 +67,11 @@ For a valid input program, the driver prints:
 
 If semantic errors are found, the driver still prints the symbol-table trace and semantic diagnostics, then stops before the LL(1) and SLR phases.
 
-All console output is also mirrored into `output.txt`.
+All console output is also mirrored into `output/output.txt`.
 
 ## Example Programs
 
-- `code.tarun`: valid evaluation program with nested scopes, shadowing, `if`, `while`, `print`, and both `int` and `float`
+- `input/code.tarun`: valid evaluation program with nested scopes, shadowing, `if`, `while`, `print`, and both `int` and `float`
 - `examples/undeclared_variable.tarun`: undeclared identifier errors
 - `examples/duplicate_declaration.tarun`: duplicate declarations in one scope
 - `examples/type_mismatch.tarun`: assignment and expression type mismatches
@@ -78,8 +79,11 @@ All console output is also mirrored into `output.txt`.
 
 ## Main Files
 
-- `lexer.py`: tokenization rules and lexical errors
-- `parser.py`: recursive-descent parser and parse-tree construction
-- `symbol_table.py`: scoped symbol-table implementation with offsets
-- `semantic_analyzer.py`: semantic checks and symbol-table trace generation
-- `test.py`: CLI driver for the full pipeline
+- `pipeline/phase01_lexer.py`: tokenization rules and lexical errors
+- `pipeline/phase03_parser.py`: recursive-descent parser and parse-tree construction
+- `pipeline/phase05_symbol_table.py`: scoped symbol-table implementation with offsets
+- `pipeline/phase06_semantic_analyzer.py`: semantic checks and symbol-table trace generation
+- `pipeline/phase07_tac.py`: TAC generation
+- `pipeline/phase08_optimizer.py`: TAC optimization
+- `pipeline/phase09_target_code.py`: pseudo assembly target-code generation
+- `pipeline/test.py`: CLI driver for the full pipeline

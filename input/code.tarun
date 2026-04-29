@@ -1,0 +1,15 @@
+int a;
+int b;
+int c;
+int d;
+int e;
+int f;
+int x;
+
+while (a < b) {
+    if (c > d && e < f)
+        x = a + b * c;
+    else
+        x = (a + d) * (e - f);
+    a = a + 1;
+}

@@ -79,7 +79,7 @@ class Parser:  #All the functions defined below are parts of Parser class.
             pk, _, pl, _ = self.prev
             if k == stop_kind or (k == 'identifier' and (l > pl or pk in ['semicolon', 'left_brace', 'right_brace'])): return True
             self.pos += 1
-            if k in ['semicolon', 'left_brace'] or (k == 'keyword' and v in ['int', 'float', 'if', 'while', 'print']): return True
+            if k in ['semicolon', 'left_brace'] or (k == 'keyword' and v in ['int', 'float', 'if', 'while', 'for', 'print']): return True
         return False
 
     # this function consumes the current token if it matches the expected kind.
@@ -131,6 +131,55 @@ class Parser:  #All the functions defined below are parts of Parser class.
         if k == 'left_parenthesis': return Node("Factor", [self.eat('left_parenthesis'), self.parse_expr(), self.eat('right_parenthesis')])
         self.error_here(msg=f"syntax error: expected factor, got {self.token_desc(k, v)}")
 
+    def parse_assignment_core(self):
+        return Node("Assignment", [self.eat('identifier'), self.eat('assignment'), self.parse_expr()])
+
+    def parse_for_update(self):
+        identifier = self.eat('identifier')
+        if self.curr[0] == 'increment_operator':
+            increment = self.eat('increment_operator')
+            expr = Node(
+                "Expression",
+                [
+                    Node("Term", [Node("Factor", [Node(identifier.token_value, is_terminal=True, token_kind=identifier.token_kind, token_value=identifier.token_value, line=identifier.line, col=identifier.col)])]),
+                    Node("+", is_terminal=True, token_kind='arithmetic_operator', token_value='+', line=increment.line, col=increment.col),
+                    Node("Term", [Node("Factor", [Node("1", is_terminal=True, token_kind='integer_constant', token_value='1', line=increment.line, col=increment.col)])]),
+                ],
+            )
+            return Node("Assignment", [identifier, Node("=", is_terminal=True, token_kind='assignment', token_value='=', line=identifier.line, col=identifier.col), expr])
+
+        return Node("Assignment", [identifier, self.eat('assignment'), self.parse_expr()])
+
+    def parse_for(self):
+        header = [self.eat('keyword'), self.eat('left_parenthesis')]
+        init = self.parse_assignment_core()
+        header.append(self.eat('semicolon'))
+        condition = self.parse_bool_expr()
+        header.append(self.eat('semicolon'))
+        update = self.parse_for_update()
+        header.append(self.eat('right_parenthesis'))
+        body = self.parse_statement()
+
+        while_body_children = []
+        if body.name == "Statement" and body.children[0].name == "Block":
+            while_body_children.extend(body.children[0].children)
+        else:
+            while_body_children.append(body)
+        while_body_children.append(Node("Statement", [update]))
+
+        while_node = Node(
+            "WhileStatement",
+            [
+                Node("while", is_terminal=True, token_kind='keyword', token_value='while'),
+                Node("(", is_terminal=True, token_kind='left_parenthesis', token_value='('),
+                condition,
+                Node(")", is_terminal=True, token_kind='right_parenthesis', token_value=')'),
+                Node("Statement", [Node("Block", [Node("{", is_terminal=True, token_kind='left_brace', token_value='{')] + while_body_children + [Node("}", is_terminal=True, token_kind='right_brace', token_value='}')])]),
+            ],
+        )
+
+        return Node("Statement", [Node("Block", [Node("{", is_terminal=True, token_kind='left_brace', token_value='{'), Node("Statement", [Node("Assignment", init.children + [Node(";", is_terminal=True, token_kind='semicolon', token_value=';')])]), Node("Statement", [while_node]), Node("}", is_terminal=True, token_kind='right_brace', token_value='}')])])
+
     def parse_bool_factor(self):
         v = self.curr[1]
         if v == '!': return Node("BooleanFactor", [self.eat('boolean_operator'), self.parse_bool_factor()])
@@ -163,6 +212,7 @@ class Parser:  #All the functions defined below are parts of Parser class.
             return Node("Statement", [Node("IfStatement", kids)])
         #while loop statement.
         if k == 'keyword' and v == 'while': return Node("Statement", [Node("WhileStatement", [self.eat('keyword'), self.eat('left_parenthesis'), self.parse_bool_expr(), self.eat('right_parenthesis'), self.parse_statement()])])
+        if k == 'keyword' and v == 'for': return self.parse_for()
         #print statement.
         if k == 'keyword' and v == 'print': return Node("Statement", [Node("PrintStatement", [self.eat('keyword'), self.eat('left_parenthesis'), self.parse_expr(), self.eat('right_parenthesis'), self.eat('semicolon')])])
         #block { ... }
@@ -199,7 +249,7 @@ class Parser:  #All the functions defined below are parts of Parser class.
         if self.errors: raise SyntaxErrors(self.errors)
         print("Syntactic Validation Successful.")
         if self.flags['gui']:
-            from tree_view import draw_with_nltk; draw_with_nltk(root, hide_terminals=True)
+            from pipeline.tree_view import draw_with_nltk; draw_with_nltk(root, hide_terminals=True)
         self.print_tree(root)
         for m in ['left', 'right']:
             if self.flags[m]:
